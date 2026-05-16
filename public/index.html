@@ -14,12 +14,19 @@
   <div class="nav-inner">
     <a class="nav-logo" href="/">GINKGO Hôtel <img src="/assets/icons/favicon.svg" alt="" class="nav-logo-icon"></a>
     <div class="nav-links">
-      <a href="#rooms-section">Chambres &amp; Suites</a>
-      <a href="#spa-section">Spa Biloba</a>
-      <a href="#breakfast-section">Petit-déjeuner</a>
-      <a href="#about-section">L'Hôtel</a>
-      <a href="#contact-section">Contact</a>
+      <a href="#rooms-section" data-i18n="nav.rooms">Chambres &amp; Suites</a>
+      <a href="#spa-section" data-i18n="nav.spa">Spa Biloba</a>
+      <a href="#breakfast-section" data-i18n="nav.breakfast">Petit-déjeuner</a>
+      <a href="#about-section" data-i18n="nav.about">L'Hôtel</a>
+      <a href="#contact-section" data-i18n="nav.contact">Contact</a>
     </div>
+    <select class="lang-select" onchange="setLang(this.value)" aria-label="Language">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="it">🇮🇹 Italiano</option>
+    </select>
   </div>
 </nav>
 
@@ -27,33 +34,33 @@
 <header class="hero">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Hôtel Spa 4 étoiles · Quimper · Cornouaille</p>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Hôtel Spa 4 étoiles · Quimper · Cornouaille</p>
     <h1 class="hero-title">GINKGO Hôtel</h1>
     <p class="hero-stars">★★★★</p>
-    <p class="hero-sub">Votre expérience 4 étoiles au cœur de la Cornouaille</p>
+    <p class="hero-sub" data-i18n="hero.sub">Votre expérience 4 étoiles au cœur de la Cornouaille</p>
     <div class="hero-badges">
-      <span class="hero-badge">Guide Michelin</span>
-      <span class="hero-badge">Gault &amp; Millau</span>
-      <span class="hero-badge">Marque Bretagne</span>
+      <span class="hero-badge" data-i18n="hero.badge.michelin">Guide Michelin</span>
+      <span class="hero-badge" data-i18n="hero.badge.gaultmillau">Gault &amp; Millau</span>
+      <span class="hero-badge" data-i18n="hero.badge.bretagne">Marque Bretagne</span>
     </div>
   </div>
 </header>
 
-<!-- SEARCH BAR (airline style) -->
+<!-- SEARCH BAR -->
 <section class="search-bar-wrap">
   <div class="search-bar">
     <div class="sb-field sb-dates" id="sb-dates-trigger">
       <span class="sb-icon">📅</span>
       <div>
-        <div class="sb-label">Arrivée — Départ</div>
-        <div class="sb-value" id="sb-dates-label">Choisir les dates</div>
+        <div class="sb-label" data-i18n="sb.dates.label">Arrivée — Départ</div>
+        <div class="sb-value" id="sb-dates-label" data-i18n="sb.dates.placeholder">Choisir les dates</div>
       </div>
     </div>
     <div class="sb-divider"></div>
     <div class="sb-field">
       <span class="sb-icon">👤</span>
       <div>
-        <div class="sb-label">Voyageurs</div>
+        <div class="sb-label" data-i18n="sb.guests.label">Voyageurs</div>
         <div class="sb-value sb-guests-ctrl">
           <button class="guests-btn" id="guests-minus">−</button>
           <span id="guests-count">2</span>
@@ -61,15 +68,15 @@
         </div>
       </div>
     </div>
-    <button class="sb-search-btn" id="search-btn">Rechercher</button>
+    <button class="sb-search-btn" id="search-btn" data-i18n="sb.search">Rechercher</button>
   </div>
 
   <!-- DATE RANGE PICKER -->
   <div class="date-picker-dropdown" id="date-picker" hidden>
     <div class="dp-months" id="dp-months"></div>
     <div class="dp-footer">
-      <span id="dp-selection-label">Sélectionnez votre arrivée</span>
-      <button class="dp-clear" id="dp-clear">Effacer</button>
+      <span id="dp-selection-label"></span>
+      <button class="dp-clear" id="dp-clear" data-i18n="dp.clear">Effacer</button>
     </div>
   </div>
 </section>
@@ -78,7 +85,7 @@
 <section class="results-section" id="results-section" hidden>
   <div class="container">
     <div class="results-header">
-      <h2 id="results-title">Chambres disponibles</h2>
+      <h2 id="results-title"></h2>
       <p id="results-sub"></p>
     </div>
     <div class="rooms-grid" id="rooms-grid"></div>
@@ -88,8 +95,8 @@
 <!-- ROOMS SHOWCASE -->
 <section class="rooms-showcase" id="rooms-section">
   <div class="container">
-    <h2 class="section-title">Chambres &amp; Suites</h2>
-    <p class="section-sub">20 chambres et suites au design contemporain, dans le quartier historique de Locmaria</p>
+    <h2 class="section-title" data-i18n="showcase.title">Chambres &amp; Suites</h2>
+    <p class="section-sub" data-i18n="showcase.sub">20 chambres et suites au design contemporain, dans le quartier historique de Locmaria</p>
     <div class="rooms-grid" id="showcase-grid"></div>
   </div>
 </section>
@@ -98,45 +105,60 @@
 <section class="spa-section" id="spa-section">
   <div class="container spa-inner">
     <div class="spa-text">
-      <p class="section-eyebrow">Bien-être &amp; Sérénité</p>
-      <h2>Spa Biloba</h2>
-      <p>Offrez-vous une parenthèse de détente exclusive dans notre spa privatif. Chaque séance d'une heure est entièrement privative, conçue pour vous permettre de vous évader du quotidien et prendre soin de vous à travers un voyage sensoriel et ressourçant.</p>
+      <p class="section-eyebrow" data-i18n="spa.eyebrow">Bien-être &amp; Sérénité</p>
+      <h2 data-i18n="spa.title">Spa Biloba</h2>
+      <p data-i18n="spa.desc">Offrez-vous une parenthèse de détente exclusive dans notre spa privatif. Chaque séance d'une heure est entièrement privative, conçue pour vous permettre de vous évader du quotidien et prendre soin de vous à travers un voyage sensoriel et ressourçant.</p>
       <div class="spa-services">
         <div class="spa-service">
-          <span class="spa-icon">♨️</span>
-          <div><strong>Hammam</strong><p>Bain de vapeur parfumé à l'eucalyptus pour libérer les tensions musculaires et réduire le stress.</p></div>
+          <img src="/assets/images/downloaded/spa/hammam.webp" alt="" class="spa-icon-img">
+          <div><strong data-i18n="spa.hammam.title">Hammam</strong><p data-i18n="spa.hammam.desc">Bain de vapeur parfumé à l'eucalyptus pour libérer les tensions musculaires et réduire le stress.</p></div>
         </div>
         <div class="spa-service">
           <span class="spa-icon">🔥</span>
-          <div><strong>Sauna</strong><p>Chaleur sèche pour une relaxation profonde et l'élimination des toxines.</p></div>
+          <div><strong data-i18n="spa.sauna.title">Sauna</strong><p data-i18n="spa.sauna.desc">Chaleur sèche pour une relaxation profonde et l'élimination des toxines.</p></div>
         </div>
         <div class="spa-service">
           <span class="spa-icon">💧</span>
-          <div><strong>Jacuzzi</strong><p>Jets hydromassants ciblant les zones stratégiques pour soulager douleurs et courbatures.</p></div>
+          <div><strong data-i18n="spa.jacuzzi.title">Jacuzzi</strong><p data-i18n="spa.jacuzzi.desc">Jets hydromassants ciblant les zones stratégiques pour soulager douleurs et courbatures.</p></div>
         </div>
         <div class="spa-service">
           <span class="spa-icon">🌈</span>
-          <div><strong>Douche sensorielle</strong><p>Pluie tropicale, brumisation et chromothérapie pour une expérience immersive unique.</p></div>
+          <div><strong data-i18n="spa.shower.title">Douche sensorielle</strong><p data-i18n="spa.shower.desc">Pluie tropicale, brumisation et chromothérapie pour une expérience immersive unique.</p></div>
         </div>
         <div class="spa-service">
           <span class="spa-icon">🤲</span>
-          <div><strong>Massage Sensitif®</strong><p>Massage bien-être personnalisé, à l'huile ou par-dessus les vêtements, sur table ou en chaise.</p></div>
+          <div><strong data-i18n="spa.massage.title">Massage Sensitif®</strong><p data-i18n="spa.massage.desc">Massage bien-être personnalisé, à l'huile ou par-dessus les vêtements, sur table ou en chaise.</p></div>
         </div>
       </div>
       <div class="spa-pricing">
         <div class="spa-price-item">
           <span class="spa-price-val">32 €</span>
-          <span class="spa-price-label">/ pers. · 1h · Résidents hôtel</span>
+          <span class="spa-price-label" data-i18n="spa.price.residents">/ pers. · 1h · Résidents hôtel</span>
         </div>
         <div class="spa-price-item">
           <span class="spa-price-val">36 €</span>
-          <span class="spa-price-label">/ pers. · 1h · Clients extérieurs</span>
+          <span class="spa-price-label" data-i18n="spa.price.external">/ pers. · 1h · Clients extérieurs</span>
         </div>
       </div>
-      <p class="spa-note">Ouvert tous les jours de 9h à 20h · Réservation obligatoire au 02 30 99 75 35<br>Âge minimum : 16 ans · Maillot de bain obligatoire</p>
+      <p class="spa-note" data-i18n="spa.note">Ouvert tous les jours de 9h à 20h · Réservation obligatoire au 02 30 99 75 35<br>Âge minimum : 16 ans · Maillot de bain obligatoire</p>
     </div>
     <div class="spa-visual">
-      <div class="spa-img-card">♨️</div>
+      <div class="room-card-img room-card-carousel spa-carousel" data-carousel data-current="0" data-len="5">
+        <img src="/assets/images/downloaded/spa/espace.webp"    alt="" class="carousel-img active">
+        <img src="/assets/images/downloaded/spa/baignoire.webp" alt="" class="carousel-img">
+        <img src="/assets/images/downloaded/spa/hammam.webp"    alt="" class="carousel-img">
+        <img src="/assets/images/downloaded/spa/massage.webp"   alt="" class="carousel-img">
+        <img src="/assets/images/downloaded/spa/serviette.webp" alt="" class="carousel-img">
+        <button class="carousel-btn carousel-prev">&#8249;</button>
+        <button class="carousel-btn carousel-next">&#8250;</button>
+        <div class="carousel-dots">
+          <span class="carousel-dot active" data-idx="0"></span>
+          <span class="carousel-dot" data-idx="1"></span>
+          <span class="carousel-dot" data-idx="2"></span>
+          <span class="carousel-dot" data-idx="3"></span>
+          <span class="carousel-dot" data-idx="4"></span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -144,45 +166,45 @@
 <!-- PETIT-DÉJEUNER -->
 <section class="breakfast-section" id="breakfast-section">
   <div class="container">
-    <h2 class="section-title">Petit-déjeuner</h2>
-    <p class="section-sub">Un buffet généreux à base de produits locaux, servi en salle ou sur la terrasse ensoleillée</p>
+    <h2 class="section-title" data-i18n="bf.title">Petit-déjeuner</h2>
+    <p class="section-sub" data-i18n="bf.sub">Un buffet généreux à base de produits locaux, servi en salle ou sur la terrasse ensoleillée</p>
     <div class="breakfast-grid">
       <div class="breakfast-card">
         <div class="bf-icon">🥐</div>
-        <h3>Pains &amp; Viennoiseries</h3>
-        <p>Pains artisanaux, croissants, kouign amann et gâteau breton faits maison, muffins et verrines du jour.</p>
+        <h3 data-i18n="bf.breads.title">Pains &amp; Viennoiseries</h3>
+        <p data-i18n="bf.breads.desc">Pains artisanaux, croissants, kouign amann et gâteau breton faits maison, muffins et verrines du jour.</p>
       </div>
       <div class="breakfast-card">
         <div class="bf-icon">🧀</div>
-        <h3>Produits du terroir</h3>
-        <p>Yaourts et fromage blanc fermiers, charcuterie bretonne, fromages affinés artisanaux, miel de bruyère de producteurs locaux.</p>
+        <h3 data-i18n="bf.local.title">Produits du terroir</h3>
+        <p data-i18n="bf.local.desc">Yaourts et fromage blanc fermiers, charcuterie bretonne, fromages affinés artisanaux, miel de bruyère de producteurs locaux.</p>
       </div>
       <div class="breakfast-card">
         <div class="bf-icon">🥚</div>
-        <h3>Salé &amp; Chaud</h3>
-        <p>Œufs brouillés ou omelette avec bacon croustillant, céréales bio en vrac, brochettes de fruits frais de saison.</p>
+        <h3 data-i18n="bf.savory.title">Salé &amp; Chaud</h3>
+        <p data-i18n="bf.savory.desc">Œufs brouillés ou omelette avec bacon croustillant, céréales bio en vrac, brochettes de fruits frais de saison.</p>
       </div>
       <div class="breakfast-card">
         <div class="bf-icon">🍓</div>
-        <h3>Confitures &amp; Douceurs</h3>
-        <p>Confitures maison façonnées à Quimper, caramel au beurre salé et coulis par des chocolatiers régionaux, jus d'orange et de pomme frais pressés.</p>
+        <h3 data-i18n="bf.sweets.title">Confitures &amp; Douceurs</h3>
+        <p data-i18n="bf.sweets.desc">Confitures maison façonnées à Quimper, caramel au beurre salé et coulis par des chocolatiers régionaux, jus d'orange et de pomme frais pressés.</p>
       </div>
     </div>
     <div class="breakfast-info">
       <div class="bf-info-item">
-        <strong>20 €</strong> <span>/ personne</span>
+        <strong>20 €</strong> <span data-i18n="bf.per_person">/ personne</span>
       </div>
       <div class="bf-info-sep">·</div>
       <div class="bf-info-item">
-        <strong>7h30 – 10h00</strong> <span>en semaine</span>
+        <strong>7h30 – 10h00</strong> <span data-i18n="bf.weekdays">en semaine</span>
       </div>
       <div class="bf-info-sep">·</div>
       <div class="bf-info-item">
-        <strong>8h00 – 10h00</strong> <span>week-ends &amp; jours fériés</span>
+        <strong>8h00 – 10h00</strong> <span data-i18n="bf.weekend">week-ends &amp; jours fériés</span>
       </div>
       <div class="bf-info-sep">·</div>
       <div class="bf-info-item">
-        <span>Réservation à l'arrivée · Allergies sur demande</span>
+        <span data-i18n="bf.info">Réservation à l'arrivée · Allergies sur demande</span>
       </div>
     </div>
   </div>
@@ -192,22 +214,34 @@
 <section class="about-section" id="about-section">
   <div class="container about-inner">
     <div class="about-text">
-      <p class="section-eyebrow">Notre histoire</p>
-      <h2>L'Esprit Ginkgo</h2>
-      <p>Niché dans le quartier historique de Locmaria, à deux pas de la cathédrale Saint-Corentin et du musée des Beaux-Arts, l'Hôtel Ginkgo vous accueille dans un écrin de sérénité à 5 minutes de la gare de Quimper.</p>
-      <p>Ses 20 chambres et suites au design contemporain s'ouvrent sur un jardin classé remarquable, face au Prieuré de Locmaria du XI<sup>e</sup> siècle et aux rives de l'Odet. Des œuvres d'art contemporain habitent chaque espace de l'hôtel.</p>
+      <p class="section-eyebrow" data-i18n="about.eyebrow">Notre histoire</p>
+      <h2 data-i18n="about.title">L'Esprit Ginkgo</h2>
+      <p data-i18n="about.p1">Niché dans le quartier historique de Locmaria, à deux pas de la cathédrale Saint-Corentin et du musée des Beaux-Arts, l'Hôtel Ginkgo vous accueille dans un écrin de sérénité à 5 minutes de la gare de Quimper.</p>
+      <p data-i18n="about.p2">Ses 20 chambres et suites au design contemporain s'ouvrent sur un jardin classé remarquable, face au Prieuré de Locmaria du XI<sup>e</sup> siècle et aux rives de l'Odet. Des œuvres d'art contemporain habitent chaque espace de l'hôtel.</p>
       <ul class="amenity-list">
-        <li>🌿 Jardin classé remarquable &amp; vue sur l'Odet</li>
-        <li>🚗 Parking privé gratuit</li>
-        <li>📶 Wi-Fi haut débit offert</li>
-        <li>🚲 Local vélo sécurisé</li>
-        <li>🔌 Bornes de recharge VE à 1,5 km</li>
-        <li>📰 Presse digitale : 60+ magazines</li>
-        <li>🚭 Hôtel 100% non-fumeur</li>
-        <li>🏖️ Plage de Bénodet à 15 min</li>
+        <li data-i18n="about.a1">🌿 Jardin classé remarquable &amp; vue sur l'Odet</li>
+        <li data-i18n="about.a2">🚗 Parking privé gratuit</li>
+        <li data-i18n="about.a3">📶 Wi-Fi haut débit offert</li>
+        <li data-i18n="about.a4">🚲 Local vélo sécurisé</li>
+        <li data-i18n="about.a5">🔌 Bornes de recharge VE à 1,5 km</li>
+        <li data-i18n="about.a6">📰 Presse digitale : 60+ magazines</li>
+        <li data-i18n="about.a7">🚭 Hôtel 100% non-fumeur</li>
+        <li data-i18n="about.a8">🏖️ Plage de Bénodet à 15 min</li>
       </ul>
     </div>
-    <div class="about-img">🌿</div>
+    <div class="about-imgs">
+      <img src="/assets/images/downloaded/homepage/prieure.webp" alt="Prieuré de Locmaria" class="about-img-main">
+      <img src="/assets/images/downloaded/homepage/prieure-jardin.webp" alt="Jardin du Prieuré" class="about-img-sub">
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews-section" hidden>
+  <div class="container">
+    <p class="section-eyebrow">Avis de nos voyageurs</p>
+    <h2 class="section-title">Ce qu'ils ont vécu</h2>
+    <div class="reviews-track" id="reviews-track"></div>
   </div>
 </section>
 
@@ -215,71 +249,93 @@
 <section class="contact-section" id="contact-section">
   <div class="container contact-inner">
     <div>
-      <h2>Nous Trouver</h2>
-      <p>1 rue du Chanoine Moreau<br>29000 Quimper, France</p>
+      <h2 data-i18n="contact.find.title">Nous Trouver</h2>
+      <p data-i18n="contact.find.addr">1 rue du Chanoine Moreau<br>29000 Quimper, France</p>
       <p>📞 <a href="tel:+33230997535">02 30 99 75 35</a></p>
       <p>✉️ <a href="mailto:reservation@hotelginkgo.com">reservation@hotelginkgo.com</a></p>
-      <p style="margin-top:12px;font-size:.85rem;color:var(--muted)">GPS : N 47° 59' 18.1" · W 4° 6' 43.1"</p>
+      <p style="margin-top:12px;font-size:.85rem;color:var(--muted)" data-i18n="contact.find.gps">GPS : N 47° 59' 18.1" · W 4° 6' 43.1"</p>
     </div>
     <div>
-      <h2>Informations Pratiques</h2>
-      <p>🛎️ Arrivée : à partir de 15h00</p>
-      <p>🏁 Départ : avant 11h00</p>
-      <p>📞 Réception ouverte 24h/24</p>
-      <p>🐕 Animaux de compagnie non admis<br><span style="font-size:.82rem;color:var(--muted)">(chiens guides et d'assistance acceptés)</span></p>
+      <h2 data-i18n="contact.info.title">Informations Pratiques</h2>
+      <p data-i18n="contact.info.checkin">🛎️ Arrivée : à partir de 15h00</p>
+      <p data-i18n="contact.info.checkout">🏁 Départ : avant 11h00</p>
+      <p data-i18n="contact.info.reception">📞 Réception ouverte 24h/24</p>
+      <p data-i18n="contact.info.pets">🐕 Animaux de compagnie non admis</p>
+      <p><span style="font-size:.82rem;color:var(--muted)" data-i18n="contact.info.pets.note">(chiens guides et d'assistance acceptés)</span></p>
     </div>
     <div>
-      <h2>À Proximité</h2>
-      <p>🚂 Gare de Quimper : 5 min à pied</p>
-      <p>✈️ Aéroport Quimper Cornouaille : 10 min</p>
-      <p>🏛️ Centre historique : 5 min à pied</p>
-      <p>🏖️ Plage de Bénodet : 15 min en voiture</p>
+      <h2 data-i18n="contact.nearby.title">À Proximité</h2>
+      <p data-i18n="contact.nearby.train">🚂 Gare de Quimper : 5 min à pied</p>
+      <p data-i18n="contact.nearby.airport">✈️ Aéroport Quimper Cornouaille : 10 min</p>
+      <p data-i18n="contact.nearby.center">🏛️ Centre historique : 5 min à pied</p>
+      <p data-i18n="contact.nearby.beach">🏖️ Plage de Bénodet : 15 min en voiture</p>
     </div>
   </div>
 </section>
 
 <footer class="footer">
   <div class="footer-inner">
-    <p>© 2024 Hôtel Ginkgo · 1 rue du Chanoine Moreau, 29000 Quimper · <a href="tel:+33230997535">02 30 99 75 35</a></p>
-    <p style="margin-top:6px">Guide Michelin · Gault &amp; Millau · Marque Bretagne</p>
+    <p data-i18n="footer.copy">© 2024 Hôtel Ginkgo · 1 rue du Chanoine Moreau, 29000 Quimper · <a href="tel:+33230997535">02 30 99 75 35</a></p>
+    <p style="margin-top:6px" data-i18n="footer.awards">Guide Michelin · Gault &amp; Millau · Marque Bretagne</p>
+    <div class="footer-lang">
+      <select class="lang-select lang-select-footer" onchange="setLang(this.value)" aria-label="Language">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="it">🇮🇹 Italiano</option>
+      </select>
+    </div>
   </div>
 </footer>
 
 <!-- BOOKING MODAL -->
 <div class="modal-overlay" id="booking-modal" hidden>
-  <div class="modal">
+  <div class="modal modal-booking">
     <button class="modal-close" id="modal-close">✕</button>
-    <h2 id="modal-room-name">Réserver</h2>
-    <div class="modal-summary" id="modal-summary"></div>
-    <form id="booking-form" class="booking-form">
-      <input type="hidden" id="bf-room-id">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Prénom &amp; Nom *</label>
-          <input type="text" id="bf-name" required placeholder="Marie Dupont">
+
+    <!-- Étape 1 : Sélection de la chambre -->
+    <div id="modal-step1">
+      <h2 id="modal-category-name">Choisir une chambre</h2>
+      <div class="modal-summary" id="modal-step1-summary"></div>
+      <div id="room-picker-list"></div>
+    </div>
+
+    <!-- Étape 2 : Formulaire client -->
+    <div id="modal-step2" hidden>
+      <button class="modal-back" id="modal-back">&#8592; Retour</button>
+      <h2 id="modal-room-name">Réserver</h2>
+      <div class="modal-summary" id="modal-summary"></div>
+      <form id="booking-form" class="booking-form">
+        <input type="hidden" id="bf-room-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="modal.name">Prénom &amp; Nom *</label>
+            <input type="text" id="bf-name" required placeholder="Marie Dupont">
+          </div>
+          <div class="form-group">
+            <label data-i18n="modal.email">Email *</label>
+            <input type="email" id="bf-email" required placeholder="marie@exemple.fr">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="modal.phone">Téléphone</label>
+            <input type="tel" id="bf-phone" placeholder="02 30 99 …">
+          </div>
+          <div class="form-group">
+            <label data-i18n="modal.guests">Voyageurs</label>
+            <input type="number" id="bf-guests" min="1" max="4" value="2">
+          </div>
         </div>
         <div class="form-group">
-          <label>Email *</label>
-          <input type="email" id="bf-email" required placeholder="marie@exemple.fr">
+          <label data-i18n="modal.notes">Remarques</label>
+          <textarea id="bf-notes" rows="3" data-i18n="modal.notes.ph" placeholder="Demandes spéciales, allergies alimentaires, heure d'arrivée…"></textarea>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Téléphone</label>
-          <input type="tel" id="bf-phone" placeholder="02 30 99 …">
-        </div>
-        <div class="form-group">
-          <label>Voyageurs</label>
-          <input type="number" id="bf-guests" min="1" max="4" value="2">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Remarques</label>
-        <textarea id="bf-notes" rows="3" placeholder="Demandes spéciales, allergies alimentaires, heure d'arrivée…"></textarea>
-      </div>
-      <div class="modal-price-line" id="modal-price-line"></div>
-      <button type="submit" class="btn-book-confirm">Confirmer la réservation</button>
-    </form>
+        <div class="modal-price-line" id="modal-price-line"></div>
+        <button type="submit" class="btn-book-confirm" data-i18n="modal.confirm.btn">Confirmer la réservation</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -287,12 +343,13 @@
 <div class="modal-overlay" id="confirm-modal" hidden>
   <div class="modal modal-confirm">
     <div class="confirm-icon">✅</div>
-    <h2>Réservation confirmée !</h2>
+    <h2 id="confirm-title" data-i18n="modal.confirmed">Réservation confirmée !</h2>
     <div id="confirm-details"></div>
-    <button class="btn-book-confirm" onclick="closeConfirm()">Fermer</button>
+    <button class="btn-book-confirm" id="confirm-close" data-i18n="modal.close" onclick="closeConfirm()">Fermer</button>
   </div>
 </div>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/main.js"></script>
 </body>
 </html>

@@ -15,8 +15,12 @@
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.9.0",
     "connect-sqlite3": "^0.9.16",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.7",
+    "qrcode": "^1.5.4",
+    "stripe": "^22.1.1"
   }
 }

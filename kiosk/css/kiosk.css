@@ -1,0 +1,329 @@
+@import url('/css/fonts.css');
+
+/* ── Reset & Vars ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+:root {
+  --font-brand: 'Seibi AI';
+  --green:  #2d6a4f;
+  --green2: #40916c;
+  --green3: #52b788;
+  --radius: 20px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* ── Hero background — exact match with main page banner ──────────────────── */
+.kiosk-bg {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(150deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
+  z-index: 0;
+}
+.kiosk-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='30' fill='none' stroke='rgba(255,255,255,.03)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+}
+.kiosk-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .15);
+}
+
+/* ── Leaves ────────────────────────────────────────────────────────────────── */
+.leaves-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.ginkgo-leaf {
+  position: absolute;
+  top: -90px;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  filter: sepia(1) saturate(8) hue-rotate(-10deg) brightness(2.6);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* ── Shell ─────────────────────────────────────────────────────────────────── */
+.kiosk-shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 48px 32px 40px;
+  gap: 40px;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+.kiosk-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kiosk-brand {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  color: #fff;
+  line-height: 1;
+}
+.kiosk-logo {
+  width: 64px;
+  height: 64px;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────────── */
+.kiosk-panels {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+  flex: 1;
+}
+
+.kiosk-panel {
+  flex: 1 1 420px;
+  max-width: 540px;
+  background: rgba(255, 255, 255, .1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: var(--radius);
+  padding: 64px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.panel-icon {
+  font-size: 3.8rem;
+  line-height: 1;
+}
+
+.panel-title {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.panel-desc {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.8);
+  line-height: 1.65;
+}
+
+/* ── Kiosk button ──────────────────────────────────────────────────────────── */
+.kiosk-btn {
+  margin-top: 16px;
+  background: #fff;
+  color: var(--green);
+  border: none;
+  border-radius: 40px;
+  padding: 22px 64px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+.kiosk-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.28); }
+.kiosk-btn:active { transform: none; }
+
+/* ── QR code ───────────────────────────────────────────────────────────────── */
+.qr-wrap {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+.qr-container {
+  position: relative;
+  width: 360px;
+  height: 360px;
+}
+#qr-img {
+  display: block;
+  width: 360px;
+  height: 360px;
+}
+#qr-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+}
+
+/* ── Modal overlay ─────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-box {
+  background: #fff;
+  color: #111827;
+  border-radius: 20px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close:hover { color: #111; }
+
+.modal-title {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.5rem;
+  color: var(--green);
+  margin-bottom: 24px;
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────────── */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #6b7280;
+  margin-bottom: 7px;
+}
+.field input[type="text"],
+.field textarea {
+  width: 100%;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .2s;
+  resize: vertical;
+}
+.field input:focus,
+.field textarea:focus { border-color: var(--green); }
+
+.req { color: var(--green); }
+
+/* ── Stars ─────────────────────────────────────────────────────────────────── */
+.stars { display: flex; gap: 6px; }
+.star {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d1d5db;
+  transition: color .1s, transform .1s;
+  line-height: 1;
+  padding: 2px;
+}
+.star.active { color: #f59e0b; }
+.star:hover  { transform: scale(1.15); }
+
+/* ── Checkbox ──────────────────────────────────────────────────────────────── */
+.field-check { margin-top: 4px; }
+.check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: .88rem;
+  color: #374151;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.check-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--green); }
+
+/* ── Error ─────────────────────────────────────────────────────────────────── */
+.form-error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  margin-bottom: 12px;
+}
+
+/* ── Submit ────────────────────────────────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 13px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+  margin-top: 4px;
+}
+.submit-btn:hover { background: var(--green2); }
+.submit-btn:disabled { opacity: .6; cursor: default; }
+
+/* ── Success ───────────────────────────────────────────────────────────────── */
+#k-success {
+  text-align: center;
+  padding: 20px 0 8px;
+}
+.success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.success-title {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.6rem;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+.success-msg { font-size: .97rem; color: #374151; line-height: 1.6; margin-bottom: 20px; }
+.success-countdown { font-size: .82rem; color: #9ca3af; }

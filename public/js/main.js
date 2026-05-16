@@ -11,7 +11,7 @@ const state = {
 
 /* ── Helpers ───────────────────────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
-const fmt = d => d ? new Date(d + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : null;
+const fmt = d => d ? new Date(d + 'T12:00:00').toLocaleDateString(t('locale'), { day: 'numeric', month: 'short' }) : null;
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const toISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
@@ -38,7 +38,7 @@ function renderPicker() {
 function buildMonth(year, month) {
   const wrap = document.createElement('div');
   wrap.className = 'dp-month';
-  const title = new Date(year, month, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  const title = new Date(year, month, 1).toLocaleDateString(t('locale'), { month: 'long', year: 'numeric' });
 
   wrap.innerHTML = `
     <div class="dp-month-header">
@@ -47,7 +47,7 @@ function buildMonth(year, month) {
       <button class="dp-next">›</button>
     </div>
     <div class="dp-weekdays">
-      ${['Lu','Ma','Me','Je','Ve','Sa','Di'].map(d => `<div class="dp-weekday">${d}</div>`).join('')}
+      ${t('dp.weekdays').map(d => `<div class="dp-weekday">${d}</div>`).join('')}
     </div>
     <div class="dp-days"></div>`;
 
@@ -148,7 +148,7 @@ function nextMonth() {
 /* ── Labels ──────────────────────────────────────────────────────────────── */
 function updateSelLabel() {
   $('dp-selection-label').textContent =
-    state.picking === 'start' ? 'Sélectionnez votre arrivée' : 'Sélectionnez votre départ';
+    state.picking === 'start' ? t('dp.select.arrival') : t('dp.select.departure');
 }
 
 function updateDatesLabel() {
@@ -156,7 +156,7 @@ function updateDatesLabel() {
   $('sb-dates-label').textContent =
     ci && co ? `${ci}  →  ${co}` :
     ci       ? `${ci}  →  ?` :
-               'Choisir les dates';
+               t('sb.dates.placeholder');
 }
 
 /* ── Open / Close ────────────────────────────────────────────────────────── */
@@ -207,24 +207,27 @@ $('dp-months').addEventListener('mouseleave', () => {
 $('search-btn').onclick = async () => {
   if (!state.checkIn || !state.checkOut) {
     openPicker();
-    $('dp-selection-label').textContent = '⚠️ Veuillez choisir vos dates';
+    $('dp-selection-label').textContent = t('dp.warn');
     return;
   }
   await searchRooms();
 };
 
+let _lastResults = null;
+let _groups      = [];
+
 async function searchRooms() {
   const btn = $('search-btn');
-  btn.textContent = 'Recherche…';
+  btn.textContent = '…';
   btn.disabled = true;
   try {
     const res   = await fetch(`/api/availability?check_in=${state.checkIn}&check_out=${state.checkOut}&guests=${state.guests}`);
-    const rooms = await res.json();
-    displayResults(rooms);
+    _lastResults = await res.json();
+    displayResults(_lastResults);
   } catch {
     alert('Erreur de connexion. Veuillez réessayer.');
   } finally {
-    btn.textContent = 'Rechercher';
+    btn.innerHTML = t('sb.search');
     btn.disabled = false;
   }
 }
@@ -234,25 +237,33 @@ function displayResults(rooms) {
   const section = $('results-section');
   const n = Math.ceil((new Date(state.checkOut) - new Date(state.checkIn)) / 86400000);
   const groups = groupByType(rooms);
+  _groups = groups;
 
   $('results-title').textContent = groups.length > 0
-    ? `${groups.length} type${groups.length > 1 ? 's' : ''} de chambre disponible${groups.length > 1 ? 's' : ''}`
-    : 'Aucune disponibilité';
-  $('results-sub').textContent =
-    `${fmt(state.checkIn)} → ${fmt(state.checkOut)} · ${n} nuit${n > 1 ? 's' : ''} · ${state.guests} voyageur${state.guests > 1 ? 's' : ''}`;
+    ? t('results.types', groups.length)
+    : t('results.none');
+  $('results-sub').textContent = t('results.sub', fmt(state.checkIn), fmt(state.checkOut), n, state.guests);
 
   $('rooms-grid').innerHTML = groups.length === 0
-    ? `<p style="color:var(--muted);grid-column:1/-1">Aucune chambre disponible pour ces critères. Essayez d'autres dates.</p>`
+    ? `<p style="color:var(--muted);grid-column:1/-1">${t('results.empty')}</p>`
     : groups.map(g => typeCardHTML(g, n, true)).join('');
 
+  $('rooms-section').hidden = true;
   section.hidden = false;
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /* ── Room Type Cards ─────────────────────────────────────────────────────── */
-const typeEmoji = { duplex:'🏡', superieure:'🌿', prestige:'⭐', junior_suite:'✨', suite:'👑' };
-const typeLabel = { duplex:'Confort en Duplex', superieure:'Chambre Supérieure', prestige:'Chambre Prestige', junior_suite:'Suite Junior', suite:'Suite Prestige' };
-const TYPE_ORDER = ['duplex', 'superieure', 'prestige', 'junior_suite', 'suite'];
+let _categories = [];
+
+function getCategoryName(slug) {
+  const cat = _categories.find(c => c.slug === slug);
+  return cat ? (getLocalDesc(cat.name) || slug) : slug;
+}
+function getCategoryDesc(slug) {
+  const cat = _categories.find(c => c.slug === slug);
+  return cat ? getLocalDesc(cat.description) : '';
+}
 
 function groupByType(rooms) {
   const map = {};
@@ -265,42 +276,102 @@ function groupByType(rooms) {
       map[r.type].maxPrice = Math.max(map[r.type].maxPrice, r.price_per_night);
     }
   });
-  return TYPE_ORDER.filter(t => map[t]).map(t => map[t]);
+  const groups = Object.values(map);
+  groups.forEach(g => {
+    const amenSet = new Set();
+    g.rooms.forEach(r => {
+      (r.amenities || '').split(',').forEach(a => { const t = a.trim(); if (t) amenSet.add(t); });
+    });
+    g.amenities = [...amenSet].join(',');
+    g.photos = g.rooms.flatMap(r => (r.photos || []).map(p => `/assets/images/rooms/${r.id}/${p.filename}`));
+  });
+  const catOrder = {};
+  _categories.forEach(c => { catOrder[c.slug] = c.sort_order ?? 999; });
+  groups.sort((a, b) => ((catOrder[a.type] ?? 999) - (catOrder[b.type] ?? 999)) || a.type.localeCompare(b.type));
+  return groups;
+}
+
+function getLocalDesc(raw) {
+  if (!raw) return '';
+  try {
+    const p = JSON.parse(raw);
+    if (typeof p === 'object' && p !== null)
+      return p[_lang] || p.fr || Object.values(p).find(Boolean) || '';
+  } catch(e) {}
+  return raw;
+}
+
+function toggleAmenities(btn) {
+  const extra = btn.previousElementSibling;
+  const open = !extra.hidden;
+  extra.hidden = open;
+  btn.textContent = open
+    ? btn.textContent.replace('▴', '▾')
+    : btn.textContent.replace('▾', '▴');
+}
+
+function carouselHTML(photos, countBadge) {
+  if (photos.length === 1) {
+    return `<div class="room-card-img room-card-carousel">
+      <img src="${photos[0]}" alt="" class="carousel-img active">
+      ${countBadge}
+    </div>`;
+  }
+  const imgs = photos.map((url, i) => `<img src="${url}" alt="" class="carousel-img${i===0?' active':''}">`).join('');
+  const dots = photos.map((_, i) => `<span class="carousel-dot${i===0?' active':''}" data-idx="${i}"></span>`).join('');
+  return `<div class="room-card-img room-card-carousel" data-carousel data-current="0" data-len="${photos.length}">
+    ${imgs}
+    <button class="carousel-btn carousel-prev">&#8249;</button>
+    <button class="carousel-btn carousel-next">&#8250;</button>
+    <div class="carousel-dots">${dots}</div>
+    ${countBadge}
+  </div>`;
 }
 
 function typeCardHTML(group, nights = null, bookable = false) {
-  const amenities = (group.amenities || '').split(',').slice(0, 4).map(a => `<span class="amenity-tag">${a.trim()}</span>`).join('');
+  const amenityList = (group.amenities || '').split(',').map(a => a.trim()).filter(Boolean);
+  const VISIBLE = 4;
+  const visibleTags = amenityList.slice(0, VISIBLE).map(a => `<span class="amenity-tag">${a}</span>`).join('');
+  const extra = amenityList.slice(VISIBLE);
+  const hiddenPart = extra.length
+    ? `<span class="amenity-extra" hidden>${extra.map(a => `<span class="amenity-tag">${a}</span>`).join('')}</span><button class="amenity-more-btn" onclick="toggleAmenities(this)">+${extra.length} autres ▾</button>`
+    : '';
+  const amenities = visibleTags + hiddenPart;
 
   const priceStr = group.minPrice === group.maxPrice
     ? `${group.minPrice} €`
     : `${group.minPrice} – ${group.maxPrice} €`;
 
   const totalStr = nights
-    ? `<br><small>Total : ${(nights * group.minPrice).toFixed(0)}${group.minPrice !== group.maxPrice ? ' – ' + (nights * group.maxPrice).toFixed(0) : ''} €</small>`
+    ? `<br><small>${t('room.total')} ${(nights * group.minPrice).toFixed(0)}${group.minPrice !== group.maxPrice ? ' – ' + (nights * group.maxPrice).toFixed(0) : ''} €</small>`
     : '';
 
   const countBadge = bookable && group.rooms.length > 1
-    ? `<span class="avail-badge">${group.rooms.length} disponibles</span>`
+    ? `<span class="avail-badge">${t('room.avail.many', group.rooms.length)}</span>`
     : bookable
-    ? `<span class="avail-badge">1 disponible</span>`
+    ? `<span class="avail-badge">${t('room.avail.one')}</span>`
     : '';
 
   const btn = bookable
-    ? `<button class="btn-book" onclick="openBooking(${group.rooms[0].id})">Réserver</button>`
-    : `<button class="btn-book unavailable" onclick="openPicker()">Choisir les dates</button>`;
+    ? `<button class="btn-book" onclick="openCategoryBooking('${group.type}')">${t('room.book')}</button>`
+    : `<button class="btn-book unavailable" onclick="openPicker()">${t('room.choose_dates')}</button>`;
+
+  const imgSection = group.photos && group.photos.length > 0
+    ? carouselHTML(group.photos, countBadge)
+    : `<div class="room-card-img type-${group.type}">🛏️${countBadge}</div>`;
 
   return `
     <div class="room-card">
-      <div class="room-card-img type-${group.type}">${typeEmoji[group.type] || '🛏️'}${countBadge}</div>
+      ${imgSection}
       <div class="room-card-body">
-        <div class="room-card-type">${typeLabel[group.type] || group.type}</div>
+        <div class="room-card-type">${getCategoryName(group.type)}</div>
         <div class="room-card-name">${group.name}</div>
-        <div class="room-card-desc">${group.description || ''}</div>
+        <div class="room-card-desc">${getCategoryDesc(group.type)}</div>
         <div class="room-card-amenities">${amenities}</div>
         <div class="room-card-footer">
           <div>
-            <div class="room-price">${priceStr} <span>/ nuit</span></div>
-            <div class="room-meta">👤 max ${group.capacity} pers. ${totalStr}</div>
+            <div class="room-price">${priceStr} <span>${t('room.per_night')}</span></div>
+            <div class="room-meta">👤 ${t('room.max')} ${group.capacity} ${t('room.pers')} ${totalStr}</div>
           </div>
           ${btn}
         </div>
@@ -379,7 +450,11 @@ function typeCardHTML(group, nights = null, bookable = false) {
 
 /* ── Showcase (page load) ────────────────────────────────────────────────── */
 async function loadShowcase() {
-  const rooms = await fetch('/api/rooms').then(r => r.json());
+  const [rooms, cats] = await Promise.all([
+    fetch('/api/rooms').then(r => r.json()),
+    fetch('/api/categories').then(r => r.json())
+  ]);
+  _categories = cats;
   $('showcase-grid').innerHTML = groupByType(rooms).map(g => typeCardHTML(g)).join('');
 }
 loadShowcase();
@@ -387,65 +462,197 @@ loadShowcase();
 /* ── Booking Modal ───────────────────────────────────────────────────────── */
 let currentRoom = null;
 
+function openCategoryBooking(type) {
+  if (!state.checkIn || !state.checkOut) { openPicker(); return; }
+  const group = _groups.find(g => g.type === type);
+  if (!group) return;
+
+  const n = Math.ceil((new Date(state.checkOut) - new Date(state.checkIn)) / 86400000);
+  $('modal-category-name').textContent = getCategoryName(type);
+  $('modal-step1-summary').innerHTML = t('modal.summary', fmt(state.checkIn), fmt(state.checkOut), n, state.guests);
+
+  const list = $('room-picker-list');
+  list.innerHTML = '';
+
+  const sorted = [...group.rooms].sort((a, b) => a.price_per_night - b.price_per_night);
+  const best = sorted[0];
+  const roomLabel = r => r.name || `Chambre ${r.room_number}`;
+
+  const previewUrl = room => `/chambre/${room.id}?in=${state.checkIn || ''}&out=${state.checkOut || ''}&guests=${state.guests}`;
+
+  const bestCard = document.createElement('div');
+  bestCard.className = 'room-pick-card room-pick-best';
+  bestCard.innerHTML = `
+    <div class="room-pick-star">⭐</div>
+    <div class="room-pick-info">
+      <div class="room-pick-label">Meilleure disponibilité</div>
+      <div class="room-pick-name">${roomLabel(best)}</div>
+      <div class="room-pick-price">${best.price_per_night} € <span>/ nuit · total ${(n * best.price_per_night).toFixed(0)} €</span></div>
+    </div>
+    <div class="room-pick-actions">
+      <a class="btn-preview" href="${previewUrl(best)}" target="_blank">Aperçu</a>
+      <button class="btn-book" onclick="selectRoom(${best.id})">Choisir</button>
+    </div>`;
+  list.appendChild(bestCard);
+
+  if (sorted.length > 1) {
+    const sep = document.createElement('div');
+    sep.className = 'room-pick-sep';
+    sep.textContent = 'ou choisir une chambre spécifique';
+    list.appendChild(sep);
+
+    sorted.forEach(room => {
+      const photos = (room.photos || []).map(p => `/assets/images/rooms/${room.id}/${p.filename}`);
+      const imgHtml = photos.length > 0
+        ? `<img class="room-pick-img" src="${photos[0]}" alt="">`
+        : `<div class="room-pick-img-ph">🛏️</div>`;
+
+      const card = document.createElement('div');
+      card.className = 'room-pick-card';
+      card.innerHTML = `
+        ${imgHtml}
+        <div class="room-pick-info">
+          <div class="room-pick-name">${roomLabel(room)}</div>
+          <div class="room-pick-meta">👤 max ${room.capacity} pers.</div>
+          <div class="room-pick-price">${room.price_per_night} € <span>/ nuit · total ${(n * room.price_per_night).toFixed(0)} €</span></div>
+        </div>
+        <div class="room-pick-actions">
+          <a class="btn-preview" href="${previewUrl(room)}" target="_blank">Aperçu</a>
+          <button class="btn-book" onclick="selectRoom(${room.id})">Choisir</button>
+        </div>`;
+      list.appendChild(card);
+    });
+  }
+
+  $('modal-step1').hidden = false;
+  $('modal-step2').hidden = true;
+  $('booking-modal').hidden = false;
+}
+
+function selectRoom(roomId) { openBooking(roomId); }
+
 async function openBooking(roomId) {
   if (!state.checkIn || !state.checkOut) { openPicker(); return; }
-  const rooms = await fetch('/api/rooms').then(r => r.json());
-  currentRoom = rooms.find(r => r.id === roomId);
+
+  currentRoom = (_lastResults || []).find(r => r.id === roomId);
+  if (!currentRoom) {
+    const rooms = await fetch('/api/rooms').then(r => r.json());
+    currentRoom = rooms.find(r => r.id === roomId);
+  }
   if (!currentRoom) return;
 
   const n     = Math.ceil((new Date(state.checkOut) - new Date(state.checkIn)) / 86400000);
   const total = n * currentRoom.price_per_night;
 
-  $('modal-room-name').textContent = currentRoom.name;
-  $('modal-summary').innerHTML = `📅 ${fmt(state.checkIn)} → ${fmt(state.checkOut)} · ${n} nuit${n > 1 ? 's' : ''} · ${state.guests} voyageur${state.guests > 1 ? 's' : ''}`;
-  $('modal-price-line').textContent = `Total : ${total.toFixed(2)} €`;
+  $('modal-room-name').textContent = currentRoom.name || `Chambre ${currentRoom.room_number}`;
+  $('modal-summary').innerHTML = t('modal.summary', fmt(state.checkIn), fmt(state.checkOut), n, state.guests);
+  $('modal-price-line').textContent = t('modal.total', total.toFixed(2));
   $('bf-room-id').value = roomId;
   $('bf-guests').value  = state.guests;
+  $('modal-step1').hidden = true;
+  $('modal-step2').hidden = false;
   $('booking-modal').hidden = false;
 }
 
-$('modal-close').onclick    = () => { $('booking-modal').hidden = true; };
-$('booking-modal').onclick  = e => { if (e.target === $('booking-modal')) $('booking-modal').hidden = true; };
+$('modal-close').onclick   = () => { $('booking-modal').hidden = true; };
+$('modal-back').onclick    = () => { $('modal-step2').hidden = true; $('modal-step1').hidden = false; };
+$('booking-modal').onclick = e => { if (e.target === $('booking-modal')) $('booking-modal').hidden = true; };
 
-$('booking-form').onsubmit = async e => {
+$('booking-form').onsubmit = e => {
   e.preventDefault();
-  const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Confirmation…';
-
-  const body = {
-    room_id:     parseInt($('bf-room-id').value),
-    guest_name:  $('bf-name').value,
-    guest_email: $('bf-email').value,
-    guest_phone: $('bf-phone').value,
-    check_in:    state.checkIn,
-    check_out:   state.checkOut,
-    num_guests:  parseInt($('bf-guests').value),
-    notes:       $('bf-notes').value,
+  const payload = {
+    room_id:      parseInt($('bf-room-id').value),
+    room_name:    currentRoom ? (currentRoom.name || `Chambre ${currentRoom.room_number}`) : '',
+    room_type:    currentRoom ? currentRoom.type : '',
+    room_number:  currentRoom ? currentRoom.room_number : '',
+    price_per_night: currentRoom ? currentRoom.price_per_night : 0,
+    check_in:     state.checkIn,
+    check_out:    state.checkOut,
+    nights:       Math.ceil((new Date(state.checkOut) - new Date(state.checkIn)) / 86400000),
+    num_guests:   parseInt($('bf-guests').value),
+    guest_name:   $('bf-name').value,
+    guest_email:  $('bf-email').value,
+    guest_phone:  $('bf-phone').value,
+    notes:        $('bf-notes').value,
   };
-
-  try {
-    const res  = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    showConfirmation(data, body);
-  } catch (err) {
-    alert(`Erreur : ${err.message}`);
-    btn.disabled = false; btn.textContent = 'Confirmer la réservation';
-  }
+  sessionStorage.setItem('gk_checkout', JSON.stringify(payload));
+  window.location.href = `/checkout`;
 };
 
-function showConfirmation(data, body) {
-  $('booking-modal').hidden = true;
-  const n = data.nights;
-  $('confirm-details').innerHTML = `
-    <p><strong>Réservation N° ${data.id}</strong></p>
-    <p>${currentRoom.name}</p>
-    <p>${fmt(body.check_in)} → ${fmt(body.check_out)} · ${n} nuit${n > 1 ? 's' : ''}</p>
-    <p>Nom : ${body.guest_name}</p>
-    <p>Email : ${body.guest_email}</p>
-    <p><strong>Total : ${data.total_price.toFixed(2)} €</strong></p>
-    <p style="margin-top:12px;font-size:.8rem">Un récapitulatif vous sera envoyé par email.</p>`;
-  $('confirm-modal').hidden = false;
+function closeConfirm() { $('confirm-modal').hidden = true; }
+$('confirm-close').onclick = closeConfirm;
+
+function onLangChange() {
+  updateDatesLabel();
+  if (!$('date-picker').hidden) renderPicker();
+  updateSelLabel();
+  loadShowcase();
+  if (_lastResults && !$('results-section').hidden) displayResults(_lastResults);
 }
 
-function closeConfirm() { $('confirm-modal').hidden = true; }
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+function setCarouselSlide(carousel, idx) {
+  carousel.dataset.current = idx;
+  carousel.querySelectorAll('.carousel-img').forEach((img, i) => img.classList.toggle('active', i === idx));
+  carousel.querySelectorAll('.carousel-dot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.carousel-btn');
+  if (btn) {
+    e.stopPropagation();
+    const carousel = btn.closest('[data-carousel]');
+    if (!carousel) return;
+    const len = parseInt(carousel.dataset.len);
+    let cur = parseInt(carousel.dataset.current);
+    cur = btn.classList.contains('carousel-next') ? (cur + 1) % len : (cur - 1 + len) % len;
+    setCarouselSlide(carousel, cur);
+    return;
+  }
+  const dot = e.target.closest('.carousel-dot');
+  if (dot) {
+    e.stopPropagation();
+    const carousel = dot.closest('[data-carousel]');
+    if (carousel) setCarouselSlide(carousel, parseInt(dot.dataset.idx));
+  }
+});
+
+document.addEventListener('mouseover', e => {
+  const c = e.target.closest('[data-carousel]');
+  if (c) c.dataset.paused = '1';
+});
+document.addEventListener('mouseout', e => {
+  const c = e.target.closest('[data-carousel]');
+  if (c && !c.contains(e.relatedTarget)) delete c.dataset.paused;
+});
+
+setInterval(() => {
+  document.querySelectorAll('[data-carousel]:not([data-paused])').forEach(carousel => {
+    const len = parseInt(carousel.dataset.len);
+    if (len <= 1) return;
+    setCarouselSlide(carousel, (parseInt(carousel.dataset.current) + 1) % len);
+  });
+}, 4500);
+
+/* ── Reviews (avis voyageurs) ────────────────────────────────────────────── */
+(async function loadReviews() {
+  const reviews = await fetch('/api/reviews/approved').then(r => r.json()).catch(() => []);
+  if (!reviews.length) return;
+
+  const section = document.getElementById('reviews-section');
+  const track   = document.getElementById('reviews-track');
+  const fmtDate = iso => new Date(iso).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  const stars   = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+  track.innerHTML = reviews.map(r => `
+    <div class="review-card">
+      <div class="review-stars">${stars(r.rating)}</div>
+      <p class="review-quote">${r.comment.replace(/</g,'&lt;')}</p>
+      <div>
+        <div class="review-author">${r.name.replace(/</g,'&lt;')}</div>
+        <div class="review-date">${fmtDate(r.created_at)}</div>
+      </div>
+    </div>`).join('');
+
+  section.hidden = false;
+})();

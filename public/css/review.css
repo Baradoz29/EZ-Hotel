@@ -1,0 +1,187 @@
+@import url('/css/fonts.css');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+:root {
+  --font-brand: 'Seibi AI';
+  --green:  #2d6a4f;
+  --green2: #40916c;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(160deg, #1b4332 0%, #40916c 100%) no-repeat fixed;
+  min-height: 100vh;
+  color: #111827;
+}
+
+/* ── Page layout ──────────────────────────────────────────────────────────── */
+.review-page {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.rv-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+}
+.rv-logo {
+  width: 44px;
+  height: 44px;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
+.rv-brand {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.25rem;
+  letter-spacing: .1em;
+  line-height: 1.2;
+}
+.rv-sub {
+  font-size: .82rem;
+  opacity: .8;
+  margin-top: 2px;
+}
+
+/* ── Card ──────────────────────────────────────────────────────────────────── */
+.rv-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+
+.rv-title {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.45rem;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+.rv-intro {
+  font-size: .9rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ── Fields ────────────────────────────────────────────────────────────────── */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #6b7280;
+  margin-bottom: 7px;
+}
+.field input[type="text"],
+.field textarea {
+  width: 100%;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .2s;
+  resize: vertical;
+}
+.field input:focus,
+.field textarea:focus { border-color: var(--green); }
+.req { color: var(--green); }
+
+.char-count {
+  font-size: .75rem;
+  color: #9ca3af;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* ── Stars ─────────────────────────────────────────────────────────────────── */
+.stars { display: flex; gap: 8px; }
+.star {
+  font-size: 2.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d1d5db;
+  transition: color .1s, transform .1s;
+  line-height: 1;
+  padding: 2px;
+  touch-action: manipulation;
+}
+.star.active { color: #f59e0b; }
+.star:hover  { transform: scale(1.12); }
+
+/* ── Checkbox ──────────────────────────────────────────────────────────────── */
+.field-check { margin-top: 4px; }
+.check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: .88rem;
+  color: #374151;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.check-label input { margin-top: 3px; flex-shrink: 0; accent-color: var(--green); }
+
+/* ── Error ─────────────────────────────────────────────────────────────────── */
+.form-error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  margin-bottom: 12px;
+}
+
+/* ── Submit ────────────────────────────────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+  margin-top: 6px;
+}
+.submit-btn:hover { background: var(--green2); }
+.submit-btn:disabled { opacity: .6; cursor: default; }
+
+/* ── Success ───────────────────────────────────────────────────────────────── */
+.rv-success { text-align: center; padding: 48px 24px; }
+.success-icon { font-size: 3.5rem; margin-bottom: 20px; }
+.success-title {
+  font-family: var(--font-brand), Georgia, serif;
+  font-size: 1.6rem;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+.success-msg { font-size: .97rem; color: #374151; line-height: 1.7; margin-bottom: 28px; }
+.back-link {
+  display: inline-block;
+  font-size: .9rem;
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 600;
+}
+.back-link:hover { text-decoration: underline; }

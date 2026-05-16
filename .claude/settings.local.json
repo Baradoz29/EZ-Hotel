@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"require\\('./database'\\); require\\('./server'\\)\")",
+      "WebFetch(domain:www.hotel-ginkgo.com)",
+      "Bash(ssh -i c:/Users/Claydwin/Downloads/Chatalors.key -o StrictHostKeyChecking=no opc@141.253.121.171 'sudo nginx -t && sudo systemctl reload nginx && echo '\\\\''Nginx rechargé OK'\\\\''')"
+    ]
+  }
+}

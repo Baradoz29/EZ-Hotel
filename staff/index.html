@@ -51,6 +51,9 @@
       <a class="snav-item" data-view="rooms">
         <span class="snav-icon">🛏️</span> Chambres
       </a>
+      <a class="snav-item" data-view="categories">
+        <span class="snav-icon">🏷️</span> Catégories
+      </a>
       <div class="snav-section">Personnel</div>
       <a class="snav-item" data-view="housekeeping">
         <span class="snav-icon">🧹</span> Feuille de ménage
@@ -60,6 +63,10 @@
       </a>
       <a class="snav-item" data-view="personnel">
         <span class="snav-icon">👥</span> Personnel
+      </a>
+      <div class="snav-section">Clients</div>
+      <a class="snav-item" data-view="reviews">
+        <span class="snav-icon">⭐</span> Livre d'or
       </a>
     </nav>
     <div class="sidebar-footer">
@@ -209,13 +216,24 @@
       <div class="rooms-admin-grid" id="rooms-admin-grid"></div>
     </div>
 
+    <!-- ── CATEGORIES ───────────────────────────────────────────────────── -->
+    <div id="view-categories" class="view" hidden>
+      <div class="view-header">
+        <div>
+          <h1>Catégories</h1>
+          <p>Noms et descriptions multilingues par type de chambre</p>
+        </div>
+        <button class="btn-primary" onclick="openNewCategoryCard()">+ Nouvelle catégorie</button>
+      </div>
+      <div id="categories-list" class="cat-list"></div>
+    </div>
+
     <!-- ── HOUSEKEEPING ───────────────────────────────────────────────────── -->
     <div id="view-housekeeping" class="view" hidden>
       <div class="view-header">
         <h1>Feuille de ménage</h1>
         <div class="hk-header-controls">
           <input type="date" id="hk-date" class="filter-input">
-          <button class="btn-primary" id="hk-generate-btn">⚡ Générer les tâches</button>
         </div>
       </div>
       <div class="hk-stats" id="hk-stats"></div>
@@ -273,9 +291,79 @@
     <div id="view-personnel" class="view" hidden>
       <div class="view-header">
         <h1>Gestion du personnel</h1>
-        <button class="btn-primary" id="add-employee-btn">+ Ajouter un employé</button>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <select id="emp-filter-role" class="filter-select">
+            <option value="">Tous les postes</option>
+            <optgroup label="Direction">
+              <option value="directeur">Directeur général</option>
+              <option value="directeur_adjoint">Directeur adjoint</option>
+            </optgroup>
+            <optgroup label="Hébergement">
+              <option value="gouvernante">Gouvernante d'étage</option>
+              <option value="femme_de_chambre">Femme / Valet de chambre</option>
+              <option value="lingere">Lingère</option>
+            </optgroup>
+            <optgroup label="Réception &amp; Accueil">
+              <option value="chef_reception">Chef de réception</option>
+              <option value="receptionniste">Réceptionniste</option>
+              <option value="concierge">Concierge</option>
+              <option value="bagagiste">Bagagiste / Groom</option>
+              <option value="night_auditor">Night Auditor</option>
+            </optgroup>
+            <optgroup label="Restauration">
+              <option value="chef_cuisine">Chef de cuisine</option>
+              <option value="cuisinier">Cuisinier / Commis</option>
+              <option value="serveur">Serveur / Serveuse</option>
+              <option value="barman">Barman / Barmaid</option>
+              <option value="sommelier">Sommelier</option>
+              <option value="responsable_fb">Responsable F&amp;B</option>
+            </optgroup>
+            <optgroup label="Technique &amp; Maintenance">
+              <option value="responsable_technique">Responsable technique</option>
+              <option value="maintenance">Agent de maintenance</option>
+            </optgroup>
+            <optgroup label="Spa &amp; Bien-être">
+              <option value="spa">Praticien(ne) Spa</option>
+            </optgroup>
+            <optgroup label="Sécurité">
+              <option value="securite">Agent de sécurité</option>
+            </optgroup>
+            <optgroup label="Administratif">
+              <option value="comptable">Comptable</option>
+              <option value="revenue_manager">Revenue Manager</option>
+              <option value="responsable_commercial">Responsable commercial</option>
+              <option value="responsable">Responsable / Manager</option>
+            </optgroup>
+            <optgroup label="Autres">
+              <option value="extras">Extras / Saisonnier</option>
+              <option value="stagiaire">Stagiaire</option>
+            </optgroup>
+          </select>
+          <select id="emp-filter-active" class="filter-select">
+            <option value="1">Actifs</option>
+            <option value="">Tous</option>
+            <option value="0">Inactifs</option>
+          </select>
+          <button class="btn-primary" id="add-employee-btn">+ Ajouter un employé</button>
+        </div>
       </div>
       <div class="employees-grid" id="employees-grid"></div>
+    </div>
+
+    <!-- ── LIVRE D'OR ─────────────────────────────────────────────────────── -->
+    <div id="view-reviews" class="view" hidden>
+      <div class="view-header">
+        <h1>Livre d'or</h1>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select id="reviews-filter" class="filter-select">
+            <option value="">Tous</option>
+            <option value="pending">En attente</option>
+            <option value="approved">Approuvés</option>
+          </select>
+          <a href="/kiosk" target="_blank" class="btn-secondary" style="text-decoration:none;padding:8px 14px;border-radius:8px;font-size:.85rem;background:var(--bg);border:1.5px solid var(--border);color:var(--text);cursor:pointer;">Ouvrir le kiosk ↗</a>
+        </div>
+      </div>
+      <div id="reviews-grid" class="reviews-grid"></div>
     </div>
 
   </main>
@@ -291,6 +379,19 @@
       <button class="btn-primary" id="detail-edit">Modifier</button>
       <button class="btn-danger"  id="detail-cancel">Annuler la résa</button>
       <button class="btn-delete"  id="detail-delete">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CANCEL CONFIRM MODAL ────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="cancel-modal" hidden>
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" id="cancel-modal-close">✕</button>
+    <h2 id="cancel-modal-title">Annuler la réservation</h2>
+    <div id="cancel-modal-body" class="detail-body"></div>
+    <div class="detail-actions">
+      <button class="btn-secondary" id="cancel-modal-abort">Retour</button>
+      <button class="btn-danger"    id="cancel-modal-ok">Confirmer l'annulation</button>
     </div>
   </div>
 </div>
@@ -350,15 +451,10 @@
         </div>
       </div>
       <div class="rf-group">
-        <label>Catégorie (type) * <span style="font-weight:400;color:var(--muted)">— type connu ou nouveau</span></label>
-        <input type="text" id="nc-type" placeholder="ex : superieure, duplex, prestige, junior_suite, suite…" required list="nc-type-list">
-        <datalist id="nc-type-list">
-          <option value="superieure">Chambre Supérieure</option>
-          <option value="duplex">Confort en Duplex</option>
-          <option value="prestige">Chambre Prestige</option>
-          <option value="junior_suite">Suite Junior</option>
-          <option value="suite">Suite Prestige</option>
-        </datalist>
+        <label>Catégorie *</label>
+        <select id="nc-type" required>
+          <option value="">— Choisir une catégorie —</option>
+        </select>
       </div>
       <div style="display:flex;gap:12px">
         <div class="rf-group" style="flex:1">
@@ -371,8 +467,20 @@
         </div>
       </div>
       <div class="rf-group">
-        <label>Description</label>
-        <textarea id="nc-desc" rows="3" placeholder="Description de la chambre…"></textarea>
+        <div class="ra-desc-header">
+          <label>Description</label>
+          <div class="ra-desc-header-controls">
+            <button type="button" class="ra-translate-btn" id="nc-translate-btn" onclick="translateCreateDescAllLangs()" title="Traduire depuis la langue sélectionnée vers toutes les autres">🌐 Traduire</button>
+            <select id="nc-desc-lang" class="ra-desc-lang-sel" data-prev-lang="fr" onchange="switchCreateDescLang(this)">
+              <option value="fr">🇫🇷 FR</option>
+              <option value="en">🇬🇧 EN</option>
+              <option value="de">🇩🇪 DE</option>
+              <option value="es">🇪🇸 ES</option>
+              <option value="it">🇮🇹 IT</option>
+            </select>
+          </div>
+        </div>
+        <textarea id="nc-desc" rows="3" placeholder="Description spécifique à cette chambre (optionnel)…"></textarea>
       </div>
       <div class="rf-group">
         <label>Équipements <span style="font-weight:400;color:var(--muted)">(séparés par des virgules)</span></label>
@@ -398,11 +506,50 @@
       <div class="rf-group">
         <label>Poste</label>
         <select id="ef-role">
-          <option value="femme_de_chambre">Femme / Valet de chambre</option>
-          <option value="receptionniste">Réceptionniste</option>
-          <option value="responsable">Responsable / Manager</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="extras">Extras / Saisonnier</option>
+          <optgroup label="Direction">
+            <option value="directeur">Directeur général</option>
+            <option value="directeur_adjoint">Directeur adjoint</option>
+          </optgroup>
+          <optgroup label="Hébergement">
+            <option value="gouvernante">Gouvernante d'étage</option>
+            <option value="femme_de_chambre">Femme / Valet de chambre</option>
+            <option value="lingere">Lingère</option>
+          </optgroup>
+          <optgroup label="Réception &amp; Accueil">
+            <option value="chef_reception">Chef de réception</option>
+            <option value="receptionniste">Réceptionniste</option>
+            <option value="concierge">Concierge</option>
+            <option value="bagagiste">Bagagiste / Groom</option>
+            <option value="night_auditor">Night Auditor</option>
+          </optgroup>
+          <optgroup label="Restauration">
+            <option value="chef_cuisine">Chef de cuisine</option>
+            <option value="cuisinier">Cuisinier / Commis</option>
+            <option value="serveur">Serveur / Serveuse</option>
+            <option value="barman">Barman / Barmaid</option>
+            <option value="sommelier">Sommelier</option>
+            <option value="responsable_fb">Responsable F&amp;B</option>
+          </optgroup>
+          <optgroup label="Technique &amp; Maintenance">
+            <option value="responsable_technique">Responsable technique</option>
+            <option value="maintenance">Agent de maintenance</option>
+          </optgroup>
+          <optgroup label="Spa &amp; Bien-être">
+            <option value="spa">Praticien(ne) Spa</option>
+          </optgroup>
+          <optgroup label="Sécurité">
+            <option value="securite">Agent de sécurité</option>
+          </optgroup>
+          <optgroup label="Administratif">
+            <option value="comptable">Comptable</option>
+            <option value="revenue_manager">Revenue Manager</option>
+            <option value="responsable_commercial">Responsable commercial</option>
+            <option value="responsable">Responsable / Manager</option>
+          </optgroup>
+          <optgroup label="Autres">
+            <option value="extras">Extras / Saisonnier</option>
+            <option value="stagiaire">Stagiaire</option>
+          </optgroup>
         </select>
       </div>
       <div style="display:flex;gap:12px">

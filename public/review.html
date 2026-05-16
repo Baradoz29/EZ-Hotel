@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hôtel Ginkgo — Donnez votre avis</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/review.css">
+</head>
+<body>
+
+<div class="review-page">
+
+  <header class="rv-header">
+    <img src="/assets/icons/favicon.svg" alt="Ginkgo" class="rv-logo">
+    <div>
+      <div class="rv-brand">HÔTEL GINKGO</div>
+      <div class="rv-sub">Donnez votre avis</div>
+    </div>
+  </header>
+
+  <div class="rv-card" id="rv-form-card">
+    <h1 class="rv-title">Votre séjour vous a plu ?</h1>
+    <p class="rv-intro">Partagez votre expérience — vos retours nous aident à nous améliorer et à accueillir de futurs voyageurs.</p>
+
+    <form id="review-form">
+      <div class="field">
+        <label>Votre prénom <span class="req">*</span></label>
+        <input type="text" id="rv-name" placeholder="ex. Marie" maxlength="80" required autocomplete="given-name">
+      </div>
+
+      <div class="field">
+        <label>Note <span class="req">*</span></label>
+        <div class="stars" id="rv-stars" role="group" aria-label="Note">
+          <button type="button" class="star" data-v="1">★</button>
+          <button type="button" class="star" data-v="2">★</button>
+          <button type="button" class="star" data-v="3">★</button>
+          <button type="button" class="star" data-v="4">★</button>
+          <button type="button" class="star" data-v="5">★</button>
+        </div>
+        <input type="hidden" id="rv-rating">
+      </div>
+
+      <div class="field">
+        <label>Votre commentaire <span class="req">*</span></label>
+        <textarea id="rv-comment" rows="5" placeholder="Partagez votre expérience…" maxlength="1000" required></textarea>
+        <div class="char-count"><span id="rv-char">0</span> / 1000</div>
+      </div>
+
+      <div class="field field-check">
+        <label class="check-label">
+          <input type="checkbox" id="rv-consent">
+          J'accepte que mon commentaire et mon prénom puissent apparaître sur le site de l'hôtel.
+        </label>
+      </div>
+
+      <div class="form-error" id="rv-error" hidden></div>
+
+      <button type="submit" class="submit-btn" id="rv-submit">Envoyer mon avis</button>
+    </form>
+  </div>
+
+  <!-- Succès -->
+  <div class="rv-card rv-success" id="rv-success-card" hidden>
+    <div class="success-icon">🌿</div>
+    <h2 class="success-title">Merci beaucoup !</h2>
+    <p class="success-msg">Votre avis a bien été transmis à notre équipe.<br>Nous espérons avoir le plaisir de vous accueillir à nouveau.</p>
+    <a href="/" class="back-link">← Retour au site</a>
+  </div>
+
+</div>
+
+<script src="/js/review.js"></script>
+</body>
+</html>

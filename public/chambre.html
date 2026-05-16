@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="ch-page-title">Chambre — Hôtel Ginkgo ★★★★</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/chambre.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">GINKGO Hôtel <img src="/assets/icons/favicon.svg" alt="" class="nav-logo-icon"></a>
+    <div class="nav-links">
+      <a href="/#rooms-section">Chambres &amp; Suites</a>
+      <a href="/#spa-section">Spa Biloba</a>
+      <a href="/#contact-section">Contact</a>
+    </div>
+    <select class="lang-select" onchange="setLang(this.value)" aria-label="Language">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="it">🇮🇹 Italiano</option>
+    </select>
+  </div>
+</nav>
+
+<div class="ch-back">
+  <a href="javascript:history.back()" class="ch-back-link">&#8592; Retour</a>
+</div>
+
+<!-- LAYOUT -->
+<div class="ch-layout">
+
+  <!-- MAIN CONTENT -->
+  <main class="ch-main">
+
+    <!-- Hero carousel -->
+    <div class="ch-hero" id="ch-hero">
+      <div class="ch-hero-placeholder">🛏️</div>
+    </div>
+
+    <!-- Room info -->
+    <div class="ch-info-block">
+      <div class="ch-type-badge" id="ch-type"></div>
+      <h1 class="ch-title" id="ch-title">Chargement…</h1>
+      <p class="ch-desc" id="ch-desc"></p>
+      <div class="ch-amenities-wrap" id="ch-amenities"></div>
+    </div>
+
+    <!-- Photo gallery sections -->
+    <div id="ch-galleries"></div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="ch-sidebar">
+    <div class="ch-price-card">
+      <div class="ch-price-label">À partir de</div>
+      <div class="ch-price-val" id="ch-price">—</div>
+
+      <!-- Summary shown when dates are in URL -->
+      <div class="ch-booking-summary" id="ch-summary" hidden>
+        <div class="ch-sum-dates" id="ch-sum-dates"></div>
+        <div class="ch-sum-nights" id="ch-sum-nights"></div>
+        <div class="ch-sum-total" id="ch-sum-total"></div>
+      </div>
+
+      <!-- Booking form (shown when dates available) -->
+      <form class="ch-form" id="ch-form" hidden>
+        <input type="hidden" id="ch-room-id">
+        <div class="ch-form-group">
+          <label>Prénom &amp; Nom *</label>
+          <input type="text" id="ch-name" required placeholder="Marie Dupont">
+        </div>
+        <div class="ch-form-group">
+          <label>Email *</label>
+          <input type="email" id="ch-email" required placeholder="marie@exemple.fr">
+        </div>
+        <div class="ch-form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="ch-phone" placeholder="02 30 99 …">
+        </div>
+        <div class="ch-form-group">
+          <label>Voyageurs</label>
+          <input type="number" id="ch-guests" min="1" max="4" value="2">
+        </div>
+        <div class="ch-form-group">
+          <label>Remarques</label>
+          <textarea id="ch-notes" rows="2" placeholder="Demandes spéciales, heure d'arrivée…"></textarea>
+        </div>
+        <button type="submit" class="ch-book-btn" id="ch-submit-btn">Confirmer la réservation</button>
+      </form>
+
+      <!-- CTA when no dates -->
+      <a href="/" class="ch-avail-btn" id="ch-avail-btn">Voir les disponibilités</a>
+    </div>
+
+    <!-- Contact -->
+    <div class="ch-contact-card">
+      <p>📞 <a href="tel:+33230997535">02 30 99 75 35</a></p>
+      <p>✉️ <a href="mailto:reservation@hotelginkgo.com">reservation@hotelginkgo.com</a></p>
+      <p class="ch-contact-note">Réception ouverte 24h/24</p>
+    </div>
+  </aside>
+
+</div>
+
+<!-- Lightbox -->
+<div class="ch-lightbox" id="ch-lightbox" hidden>
+  <button class="ch-lb-close" onclick="closeLightbox()">✕</button>
+  <button class="ch-lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <button class="ch-lb-next" onclick="lbNav(+1)">&#8250;</button>
+  <img class="ch-lb-img" id="ch-lb-img" src="" alt="">
+  <div class="ch-lb-counter" id="ch-lb-counter"></div>
+</div>
+
+<!-- Confirmation modal -->
+<div class="modal-overlay" id="ch-confirm-modal" hidden>
+  <div class="modal modal-confirm">
+    <div class="confirm-icon">✅</div>
+    <h2>Réservation confirmée !</h2>
+    <div id="ch-confirm-details"></div>
+    <button class="btn-book-confirm" onclick="document.getElementById('ch-confirm-modal').hidden=true">Fermer</button>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:80px">
+  <div class="footer-inner">
+    <p>© 2024 Hôtel Ginkgo · 1 rue du Chanoine Moreau, 29000 Quimper · <a href="tel:+33230997535">02 30 99 75 35</a></p>
+    <p style="margin-top:6px">Guide Michelin · Gault &amp; Millau · Marque Bretagne</p>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/chambre.js"></script>
+</body>
+</html>

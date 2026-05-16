@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finaliser la réservation — Hôtel Ginkgo ★★★★</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">GINKGO Hôtel <img src="/assets/icons/favicon.svg" alt="" class="nav-logo-icon"></a>
+    <div class="nav-links">
+      <a href="/#rooms-section">Chambres &amp; Suites</a>
+      <a href="/#contact-section">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div class="ck-back">
+  <button class="ck-back-btn" onclick="history.back()">&#8592; Retour</button>
+</div>
+
+<div class="ck-layout" id="ck-layout">
+
+  <!-- ── Left: details ─────────────────────────────────────────────────────── -->
+  <div class="ck-main">
+
+    <!-- Progress -->
+    <div class="ck-steps">
+      <div class="ck-step ck-step-done">1 Dates &amp; chambre</div>
+      <div class="ck-step-arrow">›</div>
+      <div class="ck-step ck-step-done">2 Vos coordonnées</div>
+      <div class="ck-step-arrow">›</div>
+      <div class="ck-step ck-step-active">3 Confirmation &amp; paiement</div>
+    </div>
+
+    <!-- Room summary -->
+    <section class="ck-section">
+      <h2 class="ck-section-title">Votre séjour</h2>
+      <div class="ck-room-card" id="ck-room-card">
+        <div class="ck-room-img" id="ck-room-img">🛏️</div>
+        <div class="ck-room-info">
+          <div class="ck-room-name" id="ck-room-name">Chargement…</div>
+          <div class="ck-room-dates" id="ck-room-dates"></div>
+          <div class="ck-room-guests" id="ck-room-guests"></div>
+        </div>
+        <div class="ck-room-price" id="ck-room-price"></div>
+      </div>
+    </section>
+
+    <!-- Guest recap -->
+    <section class="ck-section">
+      <div class="ck-section-hdr">
+        <h2 class="ck-section-title">Vos coordonnées</h2>
+        <button class="ck-edit-btn" onclick="history.back()">Modifier</button>
+      </div>
+      <div class="ck-guest-recap" id="ck-guest-recap"></div>
+    </section>
+
+    <!-- Extras -->
+    <section class="ck-section">
+      <h2 class="ck-section-title">Options</h2>
+
+      <label class="ck-extra-row" for="ck-breakfast">
+        <div class="ck-extra-info">
+          <span class="ck-extra-icon">☕</span>
+          <div>
+            <div class="ck-extra-name">Petit-déjeuner buffet</div>
+            <div class="ck-extra-desc">Continental · 20 € / personne / nuit</div>
+          </div>
+        </div>
+        <div class="ck-extra-right">
+          <span class="ck-extra-price" id="ck-bkf-price"></span>
+          <label class="ck-toggle">
+            <input type="checkbox" id="ck-breakfast">
+            <span class="ck-toggle-slider"></span>
+          </label>
+        </div>
+      </label>
+
+      <div class="ck-extra-row ck-extra-row-select">
+        <div class="ck-extra-info">
+          <span class="ck-extra-icon">🕐</span>
+          <div>
+            <div class="ck-extra-name">Heure d'arrivée prévue</div>
+            <div class="ck-extra-desc">Pour organiser votre accueil</div>
+          </div>
+        </div>
+        <select id="ck-arrival" class="ck-select">
+          <option value="">Je ne sais pas encore</option>
+          <option value="avant 14h">Avant 14h (selon disponibilité)</option>
+          <option value="14h–15h">14h – 15h</option>
+          <option value="15h–16h">15h – 16h</option>
+          <option value="16h–17h">16h – 17h</option>
+          <option value="17h–18h">17h – 18h</option>
+          <option value="18h–19h">18h – 19h</option>
+          <option value="19h–20h">19h – 20h</option>
+          <option value="après 20h">Après 20h</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Payment mode -->
+    <section class="ck-section" id="ck-pay-mode-section">
+      <h2 class="ck-section-title">Mode de paiement</h2>
+      <div class="ck-pay-modes">
+
+        <label class="ck-pay-mode-card ck-pay-mode-selected" id="ck-card-online">
+          <input type="radio" name="pay_mode" value="online" id="ck-mode-online" checked>
+          <span class="ck-pay-mode-icon">💳</span>
+          <div class="ck-pay-mode-body">
+            <div class="ck-pay-mode-title">Payer maintenant</div>
+            <div class="ck-pay-mode-desc">Remboursement intégral si annulation avant 48h · 1ère nuit retenue au-delà</div>
+            <div class="ck-pay-mode-amount" id="ck-online-amount"></div>
+          </div>
+          <span class="ck-pay-mode-check">✓</span>
+        </label>
+
+        <label class="ck-pay-mode-card" id="ck-card-arrival">
+          <input type="radio" name="pay_mode" value="on_arrival" id="ck-mode-arrival">
+          <span class="ck-pay-mode-icon">🏨</span>
+          <div class="ck-pay-mode-body">
+            <div class="ck-pay-mode-title">Garantir par carte, payer sur place</div>
+            <div class="ck-pay-mode-desc">1ère nuit retenue (non débitée) · Solde réglé à l'arrivée · 1ère nuit facturée si annulation tardive</div>
+            <div class="ck-pay-mode-amount" id="ck-arrival-amount"></div>
+          </div>
+          <span class="ck-pay-mode-check">✓</span>
+        </label>
+
+      </div>
+    </section>
+
+    <!-- Cancellation policy -->
+    <section class="ck-section ck-policy-section">
+      <h2 class="ck-section-title">Politique d'annulation</h2>
+      <div class="ck-policy-box">
+        <p><strong>Annulation gratuite</strong> jusqu'à 48h avant l'arrivée.</p>
+        <p>Au-delà, la première nuit sera facturée.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ── Right: price summary + CTA ────────────────────────────────────────── -->
+  <div class="ck-sidebar">
+    <div class="ck-price-card">
+      <div class="ck-price-card-title">Détail du prix</div>
+      <div class="ck-price-lines" id="ck-price-lines"></div>
+      <div class="ck-total-line">
+        <span>Total séjour</span>
+        <span class="ck-total-val" id="ck-total">—</span>
+      </div>
+      <div class="ck-guarantee-note" id="ck-guarantee-note" hidden></div>
+      <button class="ck-pay-btn" id="ck-pay-btn" disabled>
+        Passer au paiement
+      </button>
+      <div class="ck-secure-note" id="ck-secure-note">🔒 Paiement sécurisé par Stripe</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Payment modal ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="ck-payment-overlay" hidden>
+  <div class="modal ck-payment-modal">
+    <button class="modal-close" id="ck-payment-close">✕</button>
+    <h2 class="ck-payment-title">Paiement sécurisé</h2>
+    <div class="ck-payment-recap" id="ck-payment-recap"></div>
+    <div id="payment-element"></div>
+    <div class="ck-payment-error" id="payment-message" hidden></div>
+    <button class="ck-pay-btn ck-stripe-pay-btn" id="ck-stripe-pay-btn" disabled>
+      Payer <span id="ck-pay-amount">—</span>
+    </button>
+    <div class="ck-secure-note">🔒 Sécurisé par Stripe · Données chiffrées</div>
+  </div>
+</div>
+
+<!-- ── Confirmation overlay ──────────────────────────────────────────────── -->
+<div class="modal-overlay" id="ck-confirm-overlay" hidden>
+  <div class="modal ck-confirm-modal">
+    <div class="ck-confirm-icon">✓</div>
+    <h2 class="ck-confirm-title">Réservation confirmée !</h2>
+    <div class="ck-confirm-details" id="ck-confirm-details"></div>
+    <a href="/" class="ck-confirm-home-btn">Retour à l'accueil</a>
+  </div>
+</div>
+
+<!-- ── No session data fallback ──────────────────────────────────────────── -->
+<div class="ck-empty" id="ck-empty" hidden>
+  <p>Aucune réservation en cours.</p>
+  <a href="/" class="ck-avail-btn">Rechercher une chambre</a>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="/js/checkout.js"></script>
+</body>
+</html>
